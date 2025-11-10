@@ -1,10 +1,10 @@
 package aed;
 
 class MinHeap {
-    private ParPuntajeId[] heap;
-    private Handle[] handles;
-    private int size;
-    private int capacidad;
+    private ParPuntajeId[] heap; // MinHeap de ParPuntajeId ordenados por Puntaje
+    private Handle[] handles; // Array de handles (nuestro heap) ordenado por IDs
+    private int size; // Tamaño del heap
+    private int capacidad; // Capacidad máxima del heap
     
     MinHeap(int cap) {
         capacidad = cap;
@@ -15,20 +15,32 @@ class MinHeap {
     
     Handle insertar(double puntaje, int id) {
         if (size >= capacidad) {
-            int nuevaCapacidad = capacidad * 2;
-            ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
+            int nuevaCapacidad = capacidad * 2; // Al hacer capacidad * 2 nos ahorramos hacerlo cada vez que agregamos algo
 
+            ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
+            Handle[] nuevosHandles = new Handle[nuevaCapacidad];
+
+            // Copiar elementos de heap[]
             for (int i = 0; i < size; i++) {
                 nuevoHeap[i] = heap[i];
             }
 
+            // Copiar elementos de handles[]
+            for (int i = 0; i < handles.length; i++) {
+                nuevosHandles[i] = handles[i];
+            }
+
             heap = nuevoHeap;
+            handles = nuevosHandles;
             capacidad = nuevaCapacidad;
         }
         
         ParPuntajeId elem = new ParPuntajeId(puntaje, id);
-        heap[size] = elem;
+        heap[size] = elem; // Agregamos el elemento nuevo al final
         Handle h = new Handle(size);
+
+        // No me queda claro esto, que pasa si nuestro id = 100, necesitamos handles.length = 101.
+        // No se estaria guardando esto en todo caso, redimensionamos a parte del heap?
 
         if (id < handles.length) {
             handles[id] = h;

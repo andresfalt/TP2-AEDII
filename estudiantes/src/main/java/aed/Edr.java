@@ -174,8 +174,7 @@ public class Edr {
         // por mayor NotaFinal.id de estudiante
         ArrayList<NotaFinal> temp = new ArrayList<>();
         ArrayList<ParPuntajeId> todosLosElementos = new ArrayList<>();
-        
-
+        return null;  // PUSE ESTO PARA QUE NO TIRE ERROR
     }
 
 //-------------------------------------------------------CHEQUEAR COPIAS-------------------------------------------------
@@ -184,5 +183,6 @@ public class Edr {
         // Devuelve la lista de los estudiantes
         // sospechosos de haberse copiado ordenada por id de estudiante.
         // Encontrar el valor máximo de respuesta para dimensionar el array
-
+        return null; // PUSE ESTO PARA QUE NO TIRE ERROR
+    }
 }
