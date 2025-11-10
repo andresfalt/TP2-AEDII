@@ -11,6 +11,7 @@ public class Edr {
     private boolean[] _esSospechoso;
     private int _cantRespuestas;
     private int _ladoAula;
+    private int[][] _conteoRespuestas;
 
     public Edr(int LadoAula, int Cant_estudiantes, int[] ExamenCanonico) {
         // O(E * R)
@@ -144,7 +145,7 @@ public class Edr {
     }
 
 //------------------------------------------------CONSULTAR DARK WEB-------------------------------------------------------
-    public void consultarDarkWeb(int n, int[] examenDW) {
+    public void consultarDarkWeb(int k, int[] examenDW) {
         // Los/as k estudiantes que tengan el
         // peor puntaje (hasta el momento) reemplazan completamente su 
         // examen por el examenDW. Nota: en caso de empate en el puntaje,
@@ -153,6 +154,30 @@ public class Edr {
         // IMPORTANTE: Solo extraer y procesar, no reinsertar los que ya entregaron
         // Si ya entregó, simplemente no lo reinsertamos
         // (queda fuera del heap permanentemente)
+
+        int procesados = 0;
+        double puntajeDW = calcularPuntaje(examenDW); // Lo calculamos una vez, siempre va a ser igual
+
+        while (procesados < k && _puntajes.size() > 0) {
+            ParPuntajeId peorParPuntajeId = _puntajes.extraerMin();
+            int idEstudiante = peorParPuntajeId.id;
+            Estudiante e = _estudiantes[idEstudiante];
+
+            // Si ya entrego, lo saltamos
+            if (_yaEntregaron[idEstudiante]) {
+                continue;
+            }
+
+            // Reemplazo todo el examen
+            e._examen = new int[examenDW.length];
+            for (int i = 0; i < examenDW.length; i++) {
+                e._examen[i] = examenDW[i];
+            }
+
+            // Reinsertamos en el heap con el nuevo puntaje
+            e._handle = _puntajes.insertar(puntajeDW, idEstudiante);
+            procesados++;
+        }
         
     }
 
@@ -183,6 +208,11 @@ public class Edr {
         // Devuelve la lista de los estudiantes
         // sospechosos de haberse copiado ordenada por id de estudiante.
         // Encontrar el valor máximo de respuesta para dimensionar el array
+
+        for (int i = 0; i < _estudiantes.length; i++) {
+
+        }
+
         return null; // PUSE ESTO PARA QUE NO TIRE ERROR
     }
 }
