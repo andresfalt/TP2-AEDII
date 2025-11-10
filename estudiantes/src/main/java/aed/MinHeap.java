@@ -35,9 +35,9 @@ class MinHeap {
         Handle h = new Handle(size);
 
         if (id >= handles.length) {
-            // La razon de usar .max es para ahorrarnos futuros redimensionamientos.
+            // La razon de usar .max es para ahorrarnos futuros redimensionamientos
             // Si el ID es cercano a la longitud actual, agrandamos el doble para no tener que hacerlo de nuevo pronto
-            // Si el ID es un numero muy grande, lo redimensionamos para que entre justo y evitar agrandar demasiado.
+            // Si el ID es un numero muy grande, lo redimensionamos para que entre justo y evitar agrandar demasiado
             int nuevaLongitud = Math.max(handles.length * 2, id + 1);
             Handle[] nuevoHandles = new Handle[nuevaLongitud];
 
