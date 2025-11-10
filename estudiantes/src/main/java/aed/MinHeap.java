@@ -18,33 +18,40 @@ class MinHeap {
             int nuevaCapacidad = capacidad * 2; // Al hacer capacidad * 2 nos ahorramos hacerlo cada vez que agregamos algo
 
             ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
-            Handle[] nuevosHandles = new Handle[nuevaCapacidad];
 
             // Copiar elementos de heap[]
             for (int i = 0; i < size; i++) {
                 nuevoHeap[i] = heap[i];
             }
 
-            // Copiar elementos de handles[]
-            for (int i = 0; i < handles.length; i++) {
-                nuevosHandles[i] = handles[i];
-            }
-
             heap = nuevoHeap;
-            handles = nuevosHandles;
             capacidad = nuevaCapacidad;
         }
+
+        // Hasta aca es O(n) si se redimensiona, O(1) cuando no
         
         ParPuntajeId elem = new ParPuntajeId(puntaje, id);
         heap[size] = elem; // Agregamos el elemento nuevo al final
         Handle h = new Handle(size);
 
-        // No me queda claro esto, que pasa si nuestro id = 100, necesitamos handles.length = 101.
-        // No se estaria guardando esto en todo caso, redimensionamos a parte del heap?
+        if (id >= handles.length) {
+            // La razon de usar .max es para ahorrarnos futuros redimensionamientos.
+            // Si el ID es cercano a la longitud actual, agrandamos el doble para no tener que hacerlo de nuevo pronto
+            // Si el ID es un numero muy grande, lo redimensionamos para que entre justo y evitar agrandar demasiado.
+            int nuevaLongitud = Math.max(handles.length * 2, id + 1);
+            Handle[] nuevoHandles = new Handle[nuevaLongitud];
 
-        if (id < handles.length) {
-            handles[id] = h;
+            for (int i = 0; i < handles.length; i++) {
+                nuevoHandles[i] = handles[i];
+            }
+
+            handles = nuevoHandles;
         }
+
+        // Esto me queda O(m) si se redimensiona, si no O(1)
+        // m siendo handles.length, que alternativa hay?
+
+        handles[id] = h;
 
         subir(size);
         size++;
