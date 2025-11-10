@@ -15,19 +15,25 @@ class MinHeap {
     
     Handle insertar(double puntaje, int id) {
         if (size >= capacidad) {
-            ParPuntajeId[] nuevoHeap = new ParPuntajeId[capacidad];
+            int nuevaCapacidad = capacidad * 2;
+            ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
+
             for (int i = 0; i < size; i++) {
                 nuevoHeap[i] = heap[i];
             }
+
             heap = nuevoHeap;
+            capacidad = nuevaCapacidad;
         }
         
         ParPuntajeId elem = new ParPuntajeId(puntaje, id);
         heap[size] = elem;
         Handle h = new Handle(size);
+
         if (id < handles.length) {
             handles[id] = h;
         }
+
         subir(size);
         size++;
         return h;
@@ -37,11 +43,14 @@ class MinHeap {
         if (size == 0) return null;
         ParPuntajeId min = heap[0];
         size--;
+
         if (size > 0) {
             heap[0] = heap[size];
+
             if (heap[0].id < handles.length) {
                 handles[heap[0].id].posicion = 0;
             }
+
             bajar(0);
         }
         return min;

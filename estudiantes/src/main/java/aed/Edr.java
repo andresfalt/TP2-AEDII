@@ -23,14 +23,14 @@ public class Edr {
         _aula = new int[LadoAula][LadoAula];
         _solucionCanonica = ExamenCanonico;
     
-// la matriz empieza con -1 en los asientos 
+        // la matriz empieza con -1 en los asientos 
         for (int i = 0; i < LadoAula; i++) {
             for (int j = 0; j < LadoAula; j++) {
                 _aula[i][j] = -1;
             }
         }
         
-// le asignamos los lugares a los estudiantes saltando de a dos en las columnas 
+        // le asignamos los lugares a los estudiantes saltando de a dos en las columnas 
         int id = 0;
         for (int fila = 0; fila < LadoAula && id < Cant_estudiantes; fila++) {
             for (int col = 0; col < LadoAula && id < Cant_estudiantes; col += 2) {
@@ -42,7 +42,7 @@ public class Edr {
             }
         }
         
-// Construir heap con todos los estudiantes (puntaje 0)
+        // Construir heap con todos los estudiantes (puntaje 0)
         _puntajes = new MinHeap(Cant_estudiantes);
         for (int i = 0; i < Cant_estudiantes; i++) {
             _estudiantes[i]._handle = _puntajes.insertar(0, i);
