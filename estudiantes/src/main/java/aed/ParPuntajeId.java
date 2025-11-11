@@ -5,6 +5,7 @@ class ParPuntajeId implements Comparable<ParPuntajeId> {
     int id;
     
     ParPuntajeId(double p, int i) {
+        // la nota y el id estudiante
         puntaje = p;
         id = i;
     }

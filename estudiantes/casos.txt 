@@ -1,0 +1,144 @@
+casos que deberiamos considerar: # Casos de Test para Sistema EDR
+
+## 1. CONFIGURACIÓN INICIAL
+### Test: nuevo_edr
+- Crear EDR con aula 5x5, 4 estudiantes, examen de 10 preguntas
+- Verificar que todos los estudiantes tienen nota 0.0 inicialmente
+- Verificar que los estudiantes se sientan en posiciones correctas (dejando espacios)
+
+## 2. RESOLVER EJERCICIOS
+### Test: los_alumnos_resuelven_un_problema
+- Estudiante 0 responde pregunta 0 correctamente → nota: 10.0
+- Estudiante 1 responde pregunta 0 incorrectamente → nota: 0.0  
+- Estudiante 2 responde pregunta 4 correctamente → nota: 10.0
+- Estudiante 3 responde pregunta 9 incorrectamente → nota: 0.0
+
+### Test: los_alumnos_resuelven_varios_problemas
+- Estudiante 0 responde 5 preguntas correctas → nota: 50.0
+- Estudiante 1 responde varias preguntas incorrectas → nota: 0.0
+- Estudiante 2 responde preguntas pares correctas → nota: 50.0
+- Estudiante 3 responde: pares bien, impares mal → nota: 50.0
+- Estudiante 0 completa examen → nota: 100.0
+
+## 3. DETECCIÓN DE COPIAS
+
+### Test: revisar_copias_examenes_completos
+- Estudiante 0: 100% correcto
+- Estudiante 1: 100% incorrecto  
+- Estudiante 2: 50% correcto (solo pares)
+- Estudiante 3: 50% correcto (pares bien, impares mal)
+- **Resultado**: Solo estudiante 3 es sospechoso
+
+### Test: revisar_copias_examenes_incompletos
+- Estudiante 0: 3 preguntas correctas (30%)
+- Estudiante 1: 2 preguntas incorrectas (0%)
+- Estudiante 2: 1 pregunta correcta (10%)
+- Estudiante 3: 5 preguntas correctas (50%)
+- **Resultado**: Solo estudiante 0 es sospechoso
+
+### Test: no_hay_copiones
+- Cada estudiante responde con respuestas únicas (0,1,2,3)
+- Todos tienen 10% de nota
+- **Resultado**: Ningún estudiante es sospechoso
+
+### Test: todos_copiones
+- Todos responden las mismas preguntas con las mismas respuestas
+- Todos tienen 10% de nota
+- **Resultado**: Los 4 estudiantes son sospechosos
+
+### Test: copias_de_exacto_25_porciento
+- 9 estudiantes en total
+- Estudiantes 0,1,2: mismas respuestas en preguntas 0-2
+- Estudiantes 3,4,5: diferentes respuestas
+- Estudiantes 6,7,8: sin respuestas
+- **Resultado**: Estudiantes 0,1,2,4,5 son sospechosos (cumplen 25%)
+
+## 4. COPIARSE ENTRE VECINOS
+
+### Test: alumnos_se_copian_una_vez
+- Cada estudiante responde una pregunta diferente
+- Estudiante 2 se copia → nota: 20%
+- Estudiante 3 se copia → nota: 20%
+- **Resultado**: Estudiantes 2 y 3 son sospechosos
+
+### Test: alumnos_se_copian_mas_de_una_vez
+- Estudiantes se copian múltiples veces
+- Estudiante 1 se copia 2 veces → nota: 30%
+- Estudiante 2 se copia 3 veces → nota: 40%  
+- Estudiante 3 se copia 2 veces → nota: 30%
+- **Resultado**: Estudiantes 2 y 3 son sospechosos
+
+## 5. DARK WEB
+
+### Test: un_alumno_se_copia_de_la_darkweb
+- Estudiantes 1,2,3 tienen notas bajas (10%)
+- Estudiante 0 tiene nota 0%
+- Dark Web para 1 estudiante con solución completa
+- **Resultado**: Estudiante 0 recibe 100%, no hay sospechosos
+
+### Test: varios_alumnos_se_copian_de_la_darkweb  
+- Estudiantes 1,2,3 tienen notas bajas
+- Dark Web para 3 estudiantes con solución completa
+- **Resultado**: Todos reciben 100%, todos son sospechosos
+
+### Test: darkweb_no_incluye_estudiantes_que_entregaron
+- Estudiante 0 entrega con nota 0%
+- Dark Web para 2 estudiantes
+- **Resultado**: Solo estudiantes 1 y 2 reciben solución (no el 0)
+
+### Test: varios_alumnos_se_copian_de_varios_examenes
+- 8 estudiantes con notas decrecientes (80% a 10%)
+- Múltiples aplicaciones de Dark Web con diferentes exámenes
+- **Resultado**: Notas cambian según exámenes aplicados
+
+### Test: no_hay_aliasing_con_los_examenes_subidos
+- Dark Web recibe un examen
+- Se modifica el array original después
+- **Verificar**: Las notas no cambian (se hizo copia del examen)
+
+## 6. CORRECCIÓN FINAL
+
+### Test: ordenamiento_correcto
+- Estudiantes con notas: 100%, 10%, 10%, 10%
+- IDs: 0, 1, 2, 3
+- **Orden esperado**: 
+  - (100%, 0) - mayor nota
+  - (10%, 3) - misma nota, ID mayor primero
+  - (10%, 2) - misma nota, ID medio
+  - (10%, 1) - misma nota, ID menor
+
+### Test: solo_no_sospechosos
+- Si hay estudiantes sospechosos, no aparecen en corrección final
+- Si todos son sospechosos, lista vacía
+
+## 7. CASOS ESPECIALES
+
+### Test: estudiantes_sin_respuestas
+- Algunos estudiantes no responden nada
+- Verificar que no son considerados sospechosos
+
+### Test: vecinos_alejados
+- Estudiantes copiándose de vecinos no adyacentes (con espacios)
+- Verificar que encuentran correctamente a sus vecinos
+
+### Test: actualizacion_puntaje_en_tiempo_real
+- Al copiarse o resolver, el puntaje se actualiza inmediatamente
+- Verificar que el heap mantiene orden correcto
+
+### Test: entrega_afecta_darkweb
+- Estudiantes que ya entregaron no son afectados por Dark Web
+- Verificar que solo estudiantes activos reciben nuevos exámenes
+
+### Test: criterio_desempate
+- Múltiples estudiantes con mismo puntaje
+- Verificar que se desempata por ID menor en heap
+- Verificar que se ordena por ID mayor en corrección final
+
+## CRITERIOS DE VALIDACIÓN
+
+1. **Complejidades temporales** respetadas según especificación
+2. **Detección de copias**: 25% de otros estudiantes por cada respuesta
+3. **Cálculo de nota**: parte entera del porcentaje de respuestas correctas
+4. **Ordenamientos**: correctos según criterios de desempate
+5. **Manejo de memoria**: sin aliasing, copias profundas cuando es necesario
+6. **Estados consistentes**: entrega, Dark Web y corrección en orden correcto

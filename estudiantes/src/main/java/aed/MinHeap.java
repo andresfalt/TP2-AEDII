@@ -1,20 +1,22 @@
 package aed;
 
 class MinHeap {
-    private ParPuntajeId[] heap; // MinHeap de ParPuntajeId ordenados por Puntaje
-    private Handle[] handles; // Array de handles (nuestro heap) ordenado por IDs
+    private ParPuntajeId[] heap; // MinHeap de ParPuntajeId ordenados por Puntaje. El puntaje es la parte entera del porcentaje de respuestas correctas
+    private Handle[] handles; // Array de handles (nuestro heap) ordenado por IDs, es un array de posiciones 
     private int size; // Tamaño del heap
     private int capacidad; // Capacidad máxima del heap
-    
+    // charly: para mi size y capacidad es el mismo valor 
     MinHeap(int cap) {
         capacidad = cap;
         heap = new ParPuntajeId[capacidad];
         handles = new Handle[cap];
+        // charly: tu minheap arranca en 0
         size = 0;
     }
     
     Handle insertar(double puntaje, int id) {
         if (size >= capacidad) {
+            // charly: seria si nadie se presenta? la unica manera que sea cero, es mejor > ?
             int nuevaCapacidad = capacidad * 2; // Al hacer capacidad * 2 nos ahorramos hacerlo cada vez que agregamos algo
 
             ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
@@ -32,9 +34,12 @@ class MinHeap {
         
         ParPuntajeId elem = new ParPuntajeId(puntaje, id);
         heap[size] = elem; // Agregamos el elemento nuevo al final
+        // charly : creo que se agrega al principio porque size arranca en 0 
         Handle h = new Handle(size);
 
         if (id >= handles.length) {
+            // charly: handles.legth te retorna el tamaño de estudiantes que seria lo que nos dan de dato?
+            // charly: pero id solo va a ser =< a handles.length?
             // La razon de usar .max es para ahorrarnos futuros redimensionamientos
             // Si el ID es cercano a la longitud actual, agrandamos el doble para no tener que hacerlo de nuevo pronto
             // Si el ID es un numero muy grande, lo redimensionamos para que entre justo y evitar agrandar demasiado
@@ -54,7 +59,7 @@ class MinHeap {
         handles[id] = h;
 
         subir(size);
-        size++;
+        size++; // aca incrementa el tamaño size 
         return h;
     }
     
@@ -74,8 +79,9 @@ class MinHeap {
         }
         return min;
     }
-    
+
     void actualizarPrioridad(Handle h, double nuevoPuntaje, int id) {
+        // este es el principal para ir actualizando el heap a medida que se copia el alumno y cambia su puntaje
         if (h == null) return;
         int pos = h.posicion;
         if (pos >= size) return;

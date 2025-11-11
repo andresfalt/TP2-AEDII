@@ -9,6 +9,7 @@ class Estudiante {
     int _col;
     
     Estudiante(int cantRespuestas, int fila, int col) {
+        // el estudiante tiene un examens del mismo tañano del canonico , con valores iniciales -1
         _examen = new int[cantRespuestas];
         for (int i = 0; i < cantRespuestas; i++) {
             _examen[i] = -1;
