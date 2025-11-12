@@ -6,70 +6,60 @@ class MinHeap {
     private int size; // Tamaño del heap
     private int capacidad; // Capacidad máxima del heap
     // charly: para mi size y capacidad es el mismo valor 
+
     MinHeap(int cap) {
         capacidad = cap;
         heap = new ParPuntajeId[capacidad];
         handles = new Handle[cap];
-        // charly: tu minheap arranca en 0
         size = 0;
     }
     
     Handle insertar(double puntaje, int id) {
         if (size >= capacidad) {
-            // charly: seria si nadie se presenta? la unica manera que sea cero, es mejor > ?
-            int nuevaCapacidad = capacidad * 2; // Al hacer capacidad * 2 nos ahorramos hacerlo cada vez que agregamos algo
-
+            // Redimensionar heap
+            int nuevaCapacidad = capacidad * 2;
             ParPuntajeId[] nuevoHeap = new ParPuntajeId[nuevaCapacidad];
-
-            // Copiar elementos de heap[]
             for (int i = 0; i < size; i++) {
                 nuevoHeap[i] = heap[i];
             }
-
             heap = nuevoHeap;
             capacidad = nuevaCapacidad;
         }
 
-        // Hasta aca es O(n) si se redimensiona, O(1) cuando no
-        
-        ParPuntajeId elem = new ParPuntajeId(puntaje, id);
-        heap[size] = elem; // Agregamos el elemento nuevo al final
-        // charly : creo que se agrega al principio porque size arranca en 0 
-        Handle h = new Handle(size);
-
+        // CORRECCIÓN: Redimensionar handles si es necesario
         if (id >= handles.length) {
-            // charly: handles.legth te retorna el tamaño de estudiantes que seria lo que nos dan de dato?
-            // charly: pero id solo va a ser =< a handles.length?
-            // La razon de usar .max es para ahorrarnos futuros redimensionamientos
-            // Si el ID es cercano a la longitud actual, agrandamos el doble para no tener que hacerlo de nuevo pronto
-            // Si el ID es un numero muy grande, lo redimensionamos para que entre justo y evitar agrandar demasiado
             int nuevaLongitud = Math.max(handles.length * 2, id + 1);
             Handle[] nuevoHandles = new Handle[nuevaLongitud];
-
             for (int i = 0; i < handles.length; i++) {
                 nuevoHandles[i] = handles[i];
             }
-
             handles = nuevoHandles;
         }
 
-        // Esto me queda O(m) si se redimensiona, si no O(1)
-        // m siendo handles.length, que alternativa hay?
-
-        handles[id] = h;
+        ParPuntajeId elem = new ParPuntajeId(puntaje, id);
+        heap[size] = elem;
+        Handle h = new Handle(size);
+        handles[id] = h;  // CORRECCIÓN: Asignar el handle
 
         subir(size);
-        size++; // aca incrementa el tamaño size 
+        size++;
         return h;
     }
     
     ParPuntajeId extraerMin() {
         if (size == 0) return null;
+        
         ParPuntajeId min = heap[0];
-        size--;
+        
+        // CORRECCIÓN: Limpiar el handle del elemento extraído
+        if (min.id < handles.length) {
+            handles[min.id] = null;
+        }
 
+        size--;
         if (size > 0) {
             heap[0] = heap[size];
+            heap[size] = null; // Limpiar referencia
 
             if (heap[0].id < handles.length) {
                 handles[heap[0].id].posicion = 0;
@@ -81,19 +71,24 @@ class MinHeap {
     }
 
     void actualizarPrioridad(Handle h, double nuevoPuntaje, int id) {
-        // este es el principal para ir actualizando el heap a medida que se copia el alumno y cambia su puntaje
         if (h == null) return;
         int pos = h.posicion;
-        if (pos >= size) return;
         
+        // CORRECCIÓN: Verificar que la posición sea válida
+        if (pos < 0 || pos >= size) return;
+        
+        // CORRECCIÓN: Verificar que el ID coincida
+        if (heap[pos].id != id) return;
+        
+        double oldPuntaje = heap[pos].puntaje;
         heap[pos].puntaje = nuevoPuntaje;
         
-        int padre = (pos - 1) / 2;
-        if (pos > 0 && heap[pos].compareTo(heap[padre]) < 0) {
+        if (nuevoPuntaje < oldPuntaje) {
             subir(pos);
-        } else {
+        } else if (nuevoPuntaje > oldPuntaje) {
             bajar(pos);
         }
+        // Si son iguales, no hacer nada
     }
     
     private void subir(int i) {

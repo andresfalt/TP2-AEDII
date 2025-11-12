@@ -24,6 +24,8 @@ class EdrTests {
 
     @Test
     void nuevo_edr() {
+    // Verifica que al crear un nuevo Edr, todas las notas empiezan en 0.0
+
         double[] notas = edr.notas();
         double[] notas_esperadas = new double[]{0.0, 0.0, 0.0, 0.0};
         assertTrue(Arrays.equals(notas_esperadas, notas));
@@ -31,6 +33,7 @@ class EdrTests {
     
     @Test
     void los_alumnos_resuelven_un_problema() {
+        // Prueba resolver problemas individuales y verifica las notas
         double[] notas;
         double[] notas_esperadas;
 
@@ -57,6 +60,7 @@ class EdrTests {
 
     @Test
     void los_alumnos_resuelven_varios_problemas() {
+        // Prueba secuencias de resolución de problemas
         double[] notas;
         double[] notas_esperadas;
 
@@ -102,6 +106,8 @@ class EdrTests {
 
     @Test
     void revisar_copias_examenes_completos() {
+        // Prueba detección de copias cuando los exámenes están completos
+
         double[] notas;
         double[] notas_esperadas;
 
@@ -152,6 +158,7 @@ class EdrTests {
 
     @Test
     void revisar_copias_examenes_incompletos() {
+        // Prueba detección de copias con exámenes incompletos
         double[] notas;
         double[] notas_esperadas;
 
@@ -193,6 +200,7 @@ class EdrTests {
 
     @Test
     void no_hay_copiones() {
+        // Verifica que cuando todos responden diferente, no hay copias 
         double[] notas;
         double[] notas_esperadas;
 
@@ -227,6 +235,7 @@ class EdrTests {
 
     @Test
     void todos_copiones() {    //cambiar este test
+        // Prueba cuando todos los alumnos copian
         double[] notas;
         double[] notas_esperadas;
 
@@ -265,6 +274,9 @@ class EdrTests {
 
     @Test
     void copias_de_exacto_25_porciento() {
+        /* Propósito: Prueba caso límite de porcentaje de copia
+            Detalles: Con 9 alumnos, algunos copian exactamente 
+            el 25% requerido para ser considerados copiones */
         Edr edr_9 = new Edr(d_aula, 9, solucion);
         double[] notas;
         double[] notas_esperadas;
@@ -308,6 +320,9 @@ class EdrTests {
 
     @Test
     void alumnos_se_copian_una_vez(){
+        /*Propósito: Prueba el método copiarse() explícito
+            Detalles: Alumnos 2 y 3 se copian una vez, 
+            incrementando su nota en 10 puntos */
         double[] notas;
         double[] notas_esperadas;
 
@@ -352,6 +367,10 @@ class EdrTests {
 
     @Test
     void alumnos_se_copian_mas_de_una_vez(){
+        /*Propósito: Prueba copiarse múltiples veces
+        Detalles: Alumnos se copian repetidamente, 
+        acumulando +10 puntos por cada copia
+        */
         double[] notas;
         double[] notas_esperadas;
 
@@ -430,6 +449,9 @@ class EdrTests {
 
     @Test 
     void un_alumno_se_copia_de_la_darkweb(){
+        /* Propósito: Prueba acceso individual a soluciones de Dark Web
+        Detalles: Solo 1 alumno accede y obtiene todas las respuestas
+        correctas (100 puntos) */
         double[] notas;
         double[] notas_esperadas;
         //todes resuelven bien un ejercicio excepto el estudiante 0
@@ -520,6 +542,12 @@ class EdrTests {
 
     @Test
     void varios_alumnos_se_copian_de_varios_examenes(){
+        /*
+        Propósito: Prueba múltiples accesos a diferentes 
+        soluciones de Dark Web
+        Detalles: Diferentes "filtraciones" con distintos patrones
+        de respuestas afectan a diferentes alumnos
+         */
         double[] notas;
         double[] notas_esperadas;
         Edr edr_8 = new Edr(d_aula, 8, solucion);
@@ -575,12 +603,18 @@ class EdrTests {
             new NotaFinal(30.0, 3),
             
         };
-
+        
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
     }
 
     @Test 
     void no_hay_aliasing_con_los_examenes_subidos(){
+        /*
+        Propósito: Verifica que no hay aliasing 
+        (modificaciones accidentales)
+        Detalles: Cambia el array de respuestas después de subirlo
+        y verifica que no afecta las notas ya calculadas
+         */
         double[] notas;
         double[] notas_esperadas;
         int[] resolucion_dark = new int[]{0,0,2,2,5,6,7,0,0,9};
@@ -621,7 +655,7 @@ class EdrTests {
             new NotaFinal(10.0, 3),
             new NotaFinal(10.0, 1),
         };
-
+        
         assertTrue(Arrays.equals(notas_finales_esperadas, notas_finales));
     }
 }

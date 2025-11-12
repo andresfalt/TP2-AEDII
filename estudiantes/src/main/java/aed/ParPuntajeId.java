@@ -19,4 +19,13 @@ class ParPuntajeId implements Comparable<ParPuntajeId> {
 
         return Integer.compare(this.id, otro.id);
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) return false; 
+
+        ParPuntajeId other = (ParPuntajeId) obj;
+        return puntaje == other.puntaje && id == other.id;
+    }
+
+
 }
